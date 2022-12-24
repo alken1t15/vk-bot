@@ -21,7 +21,7 @@ public class Main  {
     private static final int Number = 914;
     public static void main(String[] args) throws ClientException, ApiException, InterruptedException {
         //STEAT
-        SteamWebApiClient client = new SteamWebApiClient.SteamWebApiClientBuilder("ID").build();
+        SteamWebApiClient client = new SteamWebApiClient.SteamWebApiClientBuilder("Id").build();
         GetNewsForAppRequest request = SteamWebApiRequestFactory.createGetNewsForAppRequest(570); // appId of Dota 2
         GetNewsForApp getNewsForApp;
         try {
@@ -59,41 +59,29 @@ public class Main  {
                         }
                         else if(message.getText().equals("Dota")){
                             StringBuilder stringBuilder = new StringBuilder();
-//                            StringBuilder stringBuilder1 = null;
-//                            StringBuilder stringBuilder2= null;
-                            int temp = 0;
-                            int countLength=0;
-                            int count = 0;
+                            int a = 0;
                             getNewsForApp.getAppnews().getNewsitems().stream().map(Newsitem::getContents).forEach(stringBuilder::append);
-//                            if (stringBuilder.length()>900){
-//                                stringBuilder1 = new StringBuilder();
-//                                stringBuilder2 = new StringBuilder();
-//                                stringBuilder1.append(stringBuilder.substring(0,900));
-//                                stringBuilder2.append(stringBuilder.substring(900,stringBuilder.length()));
-//                            }
-//                            vk.messages().send(actor).message(String.valueOf(stringBuilder1)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
-//                            vk.messages().send(actor).message(String.valueOf(stringBuilder2)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                             if(stringBuilder.length()<914){
                                 vk.messages().send(actor).message(String.valueOf(stringBuilder)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                             }
                             else {
-                                String str;
-                                System.out.println("Размер: " +stringBuilder.length());
+                                System.out.println(stringBuilder.length());
                                 while (true){
-                                    if(temp == stringBuilder.length()-1){
+                                    String str = null;
+                                    if(a == stringBuilder.length()){
                                         break;
                                     }
-                                   else if(count == 0){
-                                         str =stringBuilder.substring(0,Number);
-                                        temp = 914;
-                                        count++;
+                                    else if(a+914>stringBuilder.length()){
+                                        int temp3 = stringBuilder.length() - a;
+                                        str = stringBuilder.substring(a,a+temp3);
+                                        a = a + temp3;
+                                        System.out.println(a);
                                     }
                                     else {
-                                        countLength =(stringBuilder.length()-1)- (stringBuilder.length()-1-temp);// 999-86
-                                        System.out.println(temp);
-                                        System.out.println(temp+countLength);
-                                         str =stringBuilder.substring(temp,temp+countLength);
-                                        temp = temp+ countLength;
+                                        System.out.println(a);
+                                        str =stringBuilder.substring(a,a+914);
+                                        a = a+ 914;
+                                        System.out.println(a);
                                     }
                                     vk.messages().send(actor).message(str).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                                 }
