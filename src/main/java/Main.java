@@ -49,7 +49,6 @@ public class Main  {
             List<Message> messages = historyQuery.execute().getMessages().getItems();
             if(!messages.isEmpty()){
                 messages.forEach(message -> {
-                    System.out.println(message.toString());
                     try {
                         if(message.getText().equals("Привет")){
                             vk.messages().send(actor).message("Привет!").userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
@@ -58,32 +57,28 @@ public class Main  {
                             vk.messages().send(actor).message("Ты хороший человек.!").userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                         }
                         else if(message.getText().equals("Dota")){
-                            StringBuilder stringBuilder = new StringBuilder();
-                            int a = 0;
-                            getNewsForApp.getAppnews().getNewsitems().stream().map(Newsitem::getContents).forEach(stringBuilder::append);
-                            if(stringBuilder.length()<914){
-                                vk.messages().send(actor).message(String.valueOf(stringBuilder)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
+                            StringBuilder stringBuilderForMessage = new StringBuilder();
+                            int lengthMessageStart = 0;
+                            getNewsForApp.getAppnews().getNewsitems().stream().map(Newsitem::getContents).forEach(stringBuilderForMessage::append);
+                            if(stringBuilderForMessage.length()<914){
+                                vk.messages().send(actor).message(String.valueOf(stringBuilderForMessage)).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                             }
                             else {
-                                System.out.println(stringBuilder.length());
                                 while (true){
-                                    String str = null;
-                                    if(a == stringBuilder.length()){
+                                    String tempMessage = null;
+                                    if(lengthMessageStart == stringBuilderForMessage.length()){
                                         break;
                                     }
-                                    else if(a+914>stringBuilder.length()){
-                                        int temp3 = stringBuilder.length() - a;
-                                        str = stringBuilder.substring(a,a+temp3);
-                                        a = a + temp3;
-                                        System.out.println(a);
+                                    else if(lengthMessageStart+914>stringBuilderForMessage.length()){
+                                        int temp3 = stringBuilderForMessage.length() - lengthMessageStart;
+                                        tempMessage = stringBuilderForMessage.substring(lengthMessageStart,lengthMessageStart+temp3);
+                                        lengthMessageStart = lengthMessageStart + temp3;
                                     }
                                     else {
-                                        System.out.println(a);
-                                        str =stringBuilder.substring(a,a+914);
-                                        a = a+ 914;
-                                        System.out.println(a);
+                                        tempMessage =stringBuilderForMessage.substring(lengthMessageStart,lengthMessageStart+914);
+                                        lengthMessageStart = lengthMessageStart+ 914;
                                     }
-                                    vk.messages().send(actor).message(str).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
+                                    vk.messages().send(actor).message(tempMessage).userId(message.getFromId()).randomId(random.nextInt(10000)).execute();
                                 }
                             }
                         }
